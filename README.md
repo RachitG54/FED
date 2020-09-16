@@ -1,23 +1,101 @@
 README
-The code contains three codebases.
-Code contains the code base with implementations of DCFE and SSE by Jarecki et al.
-Codegarble contains the code base with justgarbled.
-CodeOblivC contains the code base with OblivC
-Code_Experiments contains the genomic data implementation in plaintext.
+This is the implementation for -  A Practical Model for Collaborative Databases: Securely Mixing, Searching and Computing: publication https://eprint.iacr.org/2019/1262 at ESORICS 2020.
+
+We have four codebases in folders Code, Codegarble, CodeOblivC, Code_Experiments.
+
+Code contains the code base with implementations of FED by modifying the implementation of MC-OXT by Jarecki et al and our CED protocols.
+
+Codegarble contains the code base with justgarbled. This is forked from https://github.com/irdan/justGarble.
+
+CodeOblivC contains the code base with OblivC. You need to download OblivC separately to run this.
+
+Code_Experiments contains the codes for generating the genomic datasets that we used for our evaluation.
 
 Also included with the source code is the additive paillier library found here: http://acsc.cs.utexas.edu/libpaillier/
 
 Pre-requisite libraries
 Boost, msgpack, openssl, oblivc, gmp library.
 
-To compile the code,
-Run make on the Code/src folder. This generates a binary in Code/bin called SSE. Ensure that there are folders: obj and bin in Code, folders: DB,EDB,keys in Code/src.
+Here is a brief tutorial on installing everything.
 
-To compile justgarbled, run make in the Codegarble folder.
-To compile oblivc download library from https://github.com/samee/obliv-c, run make on the folder by following the instructions in their README. Make a folder in the test/oblivc directory and paste all the files from the CodeOblivC folder to the new folder and run make. 
-(Give the path of this directory in string pathoblivc in Code/src/SSEincludes.cpp).
 
-Ensure that proper paths are mentioned in Code/src/SSEincludes.cpp for justgarbled, SSE and oblivc. (The experimentation parameters can be sent through command line).
+Implementation Libraries - would recommend to install everything from binaries.
+Install GMP, NTL. download version 6.1.2 for GMP from binaries and not the latest. Any GMP, NTL work. Check if they are linked properly.
+Reference links:
+https://www.shoup.net/ntl/doc/tour-unix.html
+
+Steps:
+See the link
+
+
+Install boost, I installed 1.69.0 because I vaguely remember that was the one I used initially.
+Reference links:
+https://www.boost.org/users/history/
+https://www.boost.org/doc/libs/1_69_0/more/getting_started/unix-variants.html
+
+Steps:
+Download source
+Cd into directory
+Run ./bootstrap.sh
+Build using ./b2
+Install using sudo ./b2 install
+
+See reference link 2 for the statements
+
+
+Then install msgpack. (Both c and c++ version), c is not needed but I don’t want to change code dependencies and debug right now.
+
+Steps:
+For c version:
+git clone https://github.com/msgpack/msgpack-c.git
+cd msgpack-c
+git checkout c_master
+cmake .
+Make
+sudo make install
+
+References:
+https://github.com/msgpack/msgpack-c/tree/c_master
+
+For c++ version:
+
+$ git clone https://github.com/msgpack/msgpack-c.git
+$ cd msgpack-c
+$ git checkout cpp_master
+$ cmake -DMSGPACK_CXX[11]=ON .
+$ sudo make install
+
+References:
+https://github.com/msgpack/msgpack-c/tree/cpp_master
+
+Install open ssl. Use a prior version (anything <= 1.0.2u works).
+Latest doesn’t compile with RSA data structures. (could be fixed, but would require attending to the code).
+I am using 1.0.2u right now. This is a good reference to change all paths. (I needed to fix those manually as I broke things somewhere when doing all this.)
+
+https://www.howtoforge.com/tutorial/how-to-install-openssl-from-source-on-linux/
+
+I would follow these instructions to the letter and am confident you won’t have an issue.
+
+
+Install OblivC.
+
+Reference: https://github.com/samee/obliv-c
+
+Follow this reference and you should be good.
+
+
+To compile the code, after installing the pre-requisite libraries do the following steps.
+1) Ensure that the path to paths.config are set correctly.
+2) Run make.
+
+This implicitly runs:
+a) make on the Code/src folder. This generates a binary in Code/bin called SSE.
+b) make on Codegrable.
+c) make on CodeOblivC.
+
+Test with appropriate scripts AutoEverything. They are a complete automation of the entire codebase and experimentation. To test manually, following is the README for running Code.
+
+###########################################################################
 
 <protocol = MAF/Chisq/ValueRet/Hamming/AddHom>
 
@@ -60,10 +138,26 @@ For Servers, run: ./bin/SSE 1 <protocol> <1/2>
 For AuxServers, run: ./bin/SSE 2 <protocol> <1/2>
 For Clients, run: ./bin/SSE 3 <protocol> <path_to_query_file> <1/2>
 
+You can also look at scripts testAutomate for testing single data-owner protocols and multiDOtestautomate for multiple-data owner versions.
+
+- Run the protocol
+	- There are 3 script files for running protocols under the code folder:
+		- testautomate.sh : for singleDO
+		- multiDOtestautomate.sh : for multiDO OPRF
+		- multiDOEqChecksTestAutomate.sh : for multiDO Eq checks
+
+		- Set the same parameters as set in produceData.sh in these files and run in the same manner :
+			- ./testautomate.sh Big : will create log files in log, errorlog, relevantlogs
+			- ./multiDOtestautomate.sh Big : will create log files in mDOlog, mDOerrorlog, mDOrelevantLogs
+			- ./multiDOEqChecksTestAutomate.sh Big : will create log files in mDOlog, mDOerrorlog, mDOrelevantLogs
+		- After runnign any scripts copy the required log folders in a separate place so that future make cleanfull don't erase the same.
+
+The Code folder implicitly calls the executables in Codegarble and CodeOblivC.
 
 ###########################################################################
+For creating the data for experiments in Code_Experiments folder.
 
-For running scripts to generate raw data:
+For running scripts to generate raw data for experiments:
 - Produce the dataset on which the protocols will run
 	- Use produceData.sh under securedb/src/Code_Experiments/final folder to generate the data
 	- The data is generated in a folder named data in that folder.
@@ -75,17 +169,3 @@ For running scripts to generate raw data:
 	- There are 2 more paras in the file - numdb and numAppAreas : If the numdb = 1, only the first db size is run. Same goes for numAppAreas.
 	- After setting the apt paras in the file produceData.sh, run the same as:
 		./produceData.sh Small or ./produceData.sh Big
-- Run the protocol
-	- There are 3 script files for running protocols under the code folder:
-		- testautomate.sh : for singleDO
-		- multiDOtestautomate.sh : for multiDO OPRF
-		- multiDOEqChecksTestAutomate.sh : for multiDO Eq checks
-	- Before running, create the log folders : 
-		- mkdir -p log errorlog relevantlogs mDOlog mDOrelevantlogs mDOerrorlog
-		- The makefile_nishant has make cleanfull which cleans up all these log folders 
-	- Set the same parameters as set in produceData.sh in these files and run in the same manner : 
-		- ./testautomate.sh Big : will create log files in log, errorlog, relevantlogs
-		- ./multiDOtestautomate.sh Big : will create log files in mDOlog, mDOerrorlog, mDOrelevantLogs
-		- ./multiDOEqChecksTestAutomate.sh Big : will create log files in mDOlog, mDOerrorlog, mDOrelevantLogs
-	- After runnign any scripts copy the required log folders in a separate place so that future make cleanfull don't erase the same.
-	
