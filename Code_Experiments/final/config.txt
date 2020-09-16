@@ -1,0 +1,2 @@
+MaxSampleSize=800
+MaxNumSNPs=50
