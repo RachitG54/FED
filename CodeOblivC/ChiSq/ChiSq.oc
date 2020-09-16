@@ -1,0 +1,121 @@
+#include<stdio.h>
+#include<obliv.oh>
+
+#include"ChiSq.h"
+
+void revealandprint(obliv long long *number, char* id) {
+  long long *ans;
+  revealOblivLLong(&ans,*number,0);
+  printf("%s: %lld\n",id,ans);
+}
+
+void ChiSq(void* args)
+{
+  protocolIO *io = args;
+  // int n1,n2,n;
+  // int i,j;./a.out 2 1236 -- 10
+  // obliv char s1[MAXN], s2[MAXN];
+  // obliv int res=0;
+
+  // n1 = ocBroadcastInt(io->n,1);
+  // n2 = ocBroadcastInt(io->n,2);
+
+  long N = ocBroadcastLong(io->N,1);
+  io->N = N;
+  // printf("%ld\n",N);  
+
+  // int totalNum = ocBroadcastLong(io->totalNum,1);
+  // io->totalNum = totalNum;
+  // printf("%d\n",totalNum);  
+  obliv long totalNumCase = feedOblivLong(io->totalNumCase,1);
+  obliv long totalNumControl = feedOblivLong(io->totalNumControl,1);
+
+  obliv long ServerNumCase = feedOblivLong(io->numberCase,1);
+  obliv long AuxServerNumCase = feedOblivLong(io->numberCase,2);
+
+  obliv long ServerNumControl = feedOblivLong(io->numberControl,1);
+  obliv long AuxServerNumControl = feedOblivLong(io->numberControl,2);
+
+  obliv long subdeltaCase = N - AuxServerNumCase;
+  obliv long ansCase = (ServerNumCase+subdeltaCase)%N;
+ 
+  obliv long subdeltaControl = N - AuxServerNumControl;
+  obliv long ansControl = (ServerNumControl+subdeltaControl)%N;
+
+  obliv long long sumalleleCC = ansCase;
+  sumalleleCC = sumalleleCC + ansControl;
+
+  obliv long long sumnumCC = totalNumCase;
+  sumnumCC = sumnumCC + totalNumControl;
+
+  obliv long long val1 = ansControl;
+  val1 = val1*totalNumCase;
+  // revealandprint(&val1,"val1");
+  obliv long long val2 = ansCase;
+  val2 = val2*totalNumControl;
+  // revealandprint(&val2,"val2");
+  obliv long long num = val1 - val2;
+  // revealandprint(&num,"weightedDiffCC");
+  num = 2*num*num*sumnumCC;
+
+  // revealandprint(&num,"num");
+
+  obliv long long denom = 1;
+  denom = denom*totalNumCase*totalNumControl*sumalleleCC*(2*sumnumCC - sumalleleCC);
+  
+  // revealandprint(&denom,"denom");  
+  // revealandprint(&sumalleleCC,"sumalleleCC");
+  // revealandprint(&sumnumCC,"sumnumCC");
+  // revealOblivLong(&ans,ansCase,0);
+  // printf("Case: %ld\n",ans);
+  // revealOblivLong(&ans,ansControl,0);
+  // printf("Control: %ld\n",ans);
+  // revealOblivLong(&ans,totalNumCase,0);
+  // printf("Total Case: %ld\n",ans);
+  // revealOblivLong(&ans,totalNumControl,0);
+  // printf("Total Control: %ld\n",ans);
+
+  // revealOblivLLong(&io->num,num,2);
+  // revealOblivLLong(&io->denom,denom,2);
+  
+  obliv long long ans;
+
+  obliv if(denom == 0) {
+    ans = -precision;
+  }
+  else {
+    ans = num*precision;
+    ans = ans/denom;
+  }
+  
+  // revealandprint(&ans,"ans");
+
+  int no = rand();
+  // printf("%d\n",no);
+
+  obliv long long randno = feedOblivLLong(no,2);
+  obliv long long ansrandno = ans+randno;
+
+  revealOblivLLong(&io->output2,randno,2);
+  // io.output2 = no;
+  revealOblivLLong(&io->output1,ansrandno,1);  
+
+  // (caseControlGroupCount[0]*caseControlGroupCount[1])*(sumAlleleCC*((2*sumnumCC) - sumAlleleCC)));
+  // if(obliv)
+  // obliv if(ans > 2*totalNum - ans) {
+  //   ans = 2*totalNum - ans;
+  // }
+  // obliv float freq = totalNum;
+  // freq = ans/freq; 
+  // obliv long long check = ans;
+  // revealOblivLong(&io->output,ans,2);
+  // readString(s1,n1,io->s,1);
+  // readString(s2,n2,io->s,2);
+
+  // n = (n1<n2?n1:n2);
+  // for(i=0;i<n;++i) res+=(s1[i]!=s2[i]);
+  // revealOblivInt(&io->res,res,0);
+  // io->res+=(n1+n2-n*2);
+  
+  printf("[Final OblivC] : Gate count : %ld\n", yaoGateCount()); 
+}

@@ -1,0 +1,79 @@
+#include<stdio.h>
+#include<obliv.oh>
+
+#include"MAF.h"
+
+void revealandprint(obliv long long *number, char* id) {
+  long long *ans;
+  revealOblivLLong(&ans,*number,0);
+  printf("%s: %lld\n",id,ans);
+}
+
+void MAF(void* args)
+{
+  protocolIO *io = args;
+  // int n1,n2,n;
+  // int i,j;./a.out 2 1236 -- 10
+  // obliv char s1[MAXN], s2[MAXN];
+  // obliv int res=0;
+
+  // n1 = ocBroadcastInt(io->n,1);
+  // n2 = ocBroadcastInt(io->n,2);
+
+  long N = ocBroadcastLong(io->N,1);
+  io->N = N;
+  // printf("%ld\n",N);  
+
+  // int totalNum = ocBroadcastLong(io->totalNum,1);
+  // io->totalNum = totalNum;
+  // printf("%d\n",totalNum);  
+  obliv long totalNum = feedOblivLong(io->totalNum,1);
+
+  obliv long ServerNum = feedOblivLong(io->number,1);
+  obliv long AuxServerNum = feedOblivLong(io->number,2);
+  obliv long subdelta = N - AuxServerNum;
+  obliv long ans = (ServerNum+subdelta)%N;
+  obliv if(ans > 2*totalNum - ans) {
+    ans = 2*totalNum - ans;
+  }
+
+  obliv long long ans2;
+  obliv if(totalNum == 0) {
+    ans2 = -precision;
+  }
+  else {
+    ans2 = ans*precision;
+    ans2 = ans2/(2*totalNum);
+  }
+
+  // obliv long long numprecise = ans*precision;
+  // obliv long long ansprecise = numprecise/(2*totalNum);
+
+  // obliv float freq = totalNum;
+  // freq = ans/freq; 
+  // obliv long long check = ans;
+
+  revealandprint(&ans,"ans");
+
+  revealandprint(&ans2,"ans2");
+
+  int no = rand();
+  // printf("%d\n",no);
+
+  obliv long long randno = feedOblivLLong(no,2);
+  obliv long long ansrandno = ans2+randno;
+
+  revealOblivLLong(&io->output2,randno,2);
+  // io.output2 = no;
+  revealOblivLLong(&io->output1,ansrandno,1);  
+
+  // revealOblivLong(&io->output,ansprecise,2);
+  // readString(s1,n1,io->s,1);
+  // readString(s2,n2,io->s,2);
+
+  // n = (n1<n2?n1:n2);
+  // for(i=0;i<n;++i) res+=(s1[i]!=s2[i]);
+  // revealOblivInt(&io->res,res,0);
+  // io->res+=(n1+n2-n*2);
+  printf("[Final OblivC] : Gate count : %ld\n", yaoGateCount());
+}
