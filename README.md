@@ -1,4 +1,3 @@
-README
 This is the implementation for -  A Practical Model for Collaborative Databases: Securely Mixing, Searching and Computing: publication https://eprint.iacr.org/2019/1262 at ESORICS 2020.
 
 We have four codebases in folders Code, Codegarble, CodeOblivC, Code_Experiments.
