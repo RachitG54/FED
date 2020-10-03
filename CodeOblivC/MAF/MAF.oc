@@ -1,3 +1,23 @@
+/* ====================================================================
+* Functionally Encrypted Datatores - Implementation for project eprint.iacr.org/2019/1262
+* Copyright (C) 2019  Rachit Garg Nishant Kumar
+
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+* ====================================================================
+*
+*/
 #include<stdio.h>
 #include<obliv.oh>
 
@@ -22,11 +42,11 @@ void MAF(void* args)
 
   long N = ocBroadcastLong(io->N,1);
   io->N = N;
-  // printf("%ld\n",N);  
+  // printf("%ld\n",N);
 
   // int totalNum = ocBroadcastLong(io->totalNum,1);
   // io->totalNum = totalNum;
-  // printf("%d\n",totalNum);  
+  // printf("%d\n",totalNum);
   obliv long totalNum = feedOblivLong(io->totalNum,1);
 
   obliv long ServerNum = feedOblivLong(io->number,1);
@@ -50,7 +70,7 @@ void MAF(void* args)
   // obliv long long ansprecise = numprecise/(2*totalNum);
 
   // obliv float freq = totalNum;
-  // freq = ans/freq; 
+  // freq = ans/freq;
   // obliv long long check = ans;
 
   revealandprint(&ans,"ans");
@@ -65,7 +85,7 @@ void MAF(void* args)
 
   revealOblivLLong(&io->output2,randno,2);
   // io.output2 = no;
-  revealOblivLLong(&io->output1,ansrandno,1);  
+  revealOblivLLong(&io->output1,ansrandno,1);
 
   // revealOblivLong(&io->output,ansprecise,2);
   // readString(s1,n1,io->s,1);

@@ -1,3 +1,24 @@
+/* ====================================================================
+* Functionally Encrypted Datatores - Implementation for project eprint.iacr.org/2019/1262
+* Copyright (C) 2019  Rachit Garg Nishant Kumar
+
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+* ====================================================================
+*
+*/
+
 #include<stdio.h>
 #include<stdlib.h>
 #include<obliv.h>
@@ -18,14 +39,14 @@ int main(int argc,char *argv[])
 
   int party = atoi(argv[1]);
 
-  if(party == 1) {   
-    if(argc<9) { 
+  if(party == 1) {
+    if(argc<9) {
       fprintf(stderr,"Usage: %s <1|2(party)> <port> <--|server address> <numberCase> <numberControl> <totalNumCase> <totalNumControl> <messagedim>\n",argv[0]);
       return 1;
-    } 
+    }
   }
   else if(party==2) {
-    if(argc<6) { 
+    if(argc<6) {
       fprintf(stderr,"Usage: %s <1|2(party)> <port> <--|server address> <numberCase> <numberControl>\n",argv[0]);
       return 1;
     }
@@ -37,7 +58,7 @@ int main(int argc,char *argv[])
   }
 
   //Need T.size()-totalnum, N (modulus), so basically need message dim
-  
+
   srand(time(NULL));
 
   ProtocolDesc pd;
@@ -77,13 +98,13 @@ int main(int argc,char *argv[])
   }
   else
   {
-    if(protocolConnectTcp2PProfiled(&pd,remote_host,argv[2])!=0) 
-    { 
+    if(protocolConnectTcp2PProfiled(&pd,remote_host,argv[2])!=0)
+    {
       // fprintf(stderr,"TCP connect failed\n");
       exit(1);
     }
   }
-  
+
   setCurrentParty(&pd,party);
   execYaoProtocol(&pd,ChiSq,&io);
   // char filename[10];
@@ -94,19 +115,19 @@ int main(int argc,char *argv[])
   //   printf("%lld\n",io.output1);
   // }
   // else if(party==2) {
-  //   printf("%lld\n",io.output2); 
+  //   printf("%lld\n",io.output2);
   // }
   if(party==1) {
     printf("%lld\n",io.output1);
   }
   else if(party==2) {
-    printf("%lld\n",io.output2); 
+    printf("%lld\n",io.output2);
   }
   FILE* fp;
 
-  if(party==1) 
+  if(party==1)
     fp = fopen("./src/EDB/P1Out","w");
-  else 
+  else
     fp = fopen("./src/EDB/P2Out","w");
   if(party==1) {
     fprintf(fp,"%lld\n",io.output1);
@@ -114,7 +135,7 @@ int main(int argc,char *argv[])
   }
   else if(party==2) {
     fprintf(fp,"%lld\n",io.output2);
-    // printf("Share is %lld\n",io.output2); 
+    // printf("Share is %lld\n",io.output2);
   }
   // fprintf(io.output, "%lld\n");
   fclose(fp);
@@ -128,7 +149,7 @@ int main(int argc,char *argv[])
   //   //   finalans = -1;
   //   // }
   //   // else {
-  //   //   finalans = finalans/(io.denom); 
+  //   //   finalans = finalans/(io.denom);
   //   // }
   //   printf("Final answer is %lf\n",finalans);
   // }

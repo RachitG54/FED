@@ -1,3 +1,4 @@
+
 /*
 	libpaillier - A library implementing the Paillier cryptosystem.
 
@@ -13,7 +14,27 @@
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 	General Public License for more details.
 */
+// Modified by : Rachit Garg Nishant Kumar
+/* ====================================================================
+* Functionally Encrypted Datatores - Implementation for project eprint.iacr.org/2019/1262
+* Copyright (C) 2019  Rachit Garg Nishant Kumar
 
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+* ====================================================================
+*
+*/
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -132,7 +153,7 @@ paillier_enc( paillier_ciphertext_t* res,
 	while( mpz_cmp(r, pub->n) >= 0 );
 
 	/* compute ciphertext */
-	
+
 	if( !res )
 	{
 		res = (paillier_ciphertext_t*) malloc(sizeof(paillier_ciphertext_t));
@@ -197,10 +218,10 @@ paillier_plaintext_t*
 paillier_plaintext_from_ui( unsigned long int x )
 {
 	paillier_plaintext_t* pt;
-	
+
 	pt = (paillier_plaintext_t*) malloc(sizeof(paillier_plaintext_t));
 	mpz_init_set_ui(pt->m, x);
-	
+
 	return pt;
 }
 
@@ -278,7 +299,7 @@ paillier_ciphertext_from_bytes( void* c, int len )
 	return ct;
 }
 
-void* 
+void*
 paillier_ciphertext_to_bytes( int len,
 															paillier_ciphertext_t* ct )
 {
@@ -397,7 +418,7 @@ paillier_get_rand_devurandom( void* buf, int len )
 	paillier_get_rand_file(buf, len, "/dev/urandom");
 }
 
-paillier_ciphertext_t* 
+paillier_ciphertext_t*
 paillier_create_enc_zero()
 {
 	paillier_ciphertext_t* ct;
